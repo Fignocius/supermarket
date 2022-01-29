@@ -1,20 +1,35 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
+<ion-header [translucent]="false">
+  <ion-navbar>
+    <button (click)="scan()" ion-button>
+      <ion-icon style="font-size:35px" name="bluetooth"></ion-icon>
+    </button>
+    <button [disabled]="!connected" *ngIf="!inventoring" (click)="getInventory()" ion-button icon-only>
+      <ion-icon style="font-size:35px" name="play"></ion-icon>
+    </button>
+    <button [disabled]="!connected" *ngIf="inventoring" (click)="stop()" ion-button icon-only>
+      <ion-icon  style="font-size:35px" name="stop"></ion-icon>
+    </button>
+    
+    <ion-icon style="font-size:35px; color:#22d022" *ngIf="connected" name="checkbox"></ion-icon>
+    <ion-icon style="font-size:35px; color:red" *ngIf="!connected" name="checkbox"></ion-icon>
+
+    <ion-icon *ngIf="connected" style="font-size:25px;" name="battery-full">{{batteryLevel}}%</ion-icon>
+    <ion-icon (click)="clearTags()" [disabled]="!connected" style="font-size:35px; color:red" *ngIf="tags.length" name="trash"></ion-icon>
+  </ion-navbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <p>{{ status }}</p>
+  <p>{{ requester }}</p>
+  <ion-list>
+    <ion-item button (click)="handleConnection(device)" *ngFor="let device of devices" >
+      <h3>{{ device.name }}</h3>
+      <span>{{ device.id }}</span>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-item *ngFor="let tag of tags">
+      {{tag}}
+    </ion-item>
+  </ion-list>
 </ion-content>
